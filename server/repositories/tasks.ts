@@ -30,6 +30,7 @@ const buildNameCondition = (name: string) => {
 const buildArgsCondition = (value: string) => {
   if (envVariables.dbDriver === 'postgres') {
     const pattern = `%${escapeLikePattern(value.toLowerCase())}%`
+    // must stay in sync with the tasksArgsTrgm index expression in db/init.ts
     return sql`lower(coalesce(${tasksTable.args}::text, '') || ' ' || coalesce(${tasksTable.kwargs}::text, '')) LIKE ${pattern}`
   }
   // sqlite LIKE is case-insensitive for ASCII only and lower() is ASCII-only too,
